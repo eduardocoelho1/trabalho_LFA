@@ -1,0 +1,12 @@
+# ignora tudo
+*
+
+# não ignora arquivos com extensão
+!*.*
+
+# não ignora diretórios
+!*/
+
+# ignora arquivos com estas extensões
+*.txt
+*.class
