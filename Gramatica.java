@@ -11,6 +11,10 @@ public class Gramatica {
         regras = new LinkedHashMap<>();
     }
     
+    public Gramatica(Map<String, Set<String>> r) {
+        regras = new LinkedHashMap<>(r);
+    }
+    
     public void adiciona(String nome, Set<String> producoes) {
         if (regras.get(nome) != null) {
             Set<String> prodAntigas = new HashSet<>(regras.get(nome));
@@ -34,6 +38,38 @@ public class Gramatica {
                 }
             }
             System.out.println();
+        }
+    }
+
+    public Gramatica removeIniRec() {
+        Map.Entry<String, Set<String>> regraIni = regras.entrySet().iterator().next();
+        String nomeIni = regraIni.getKey();
+        Set<String> prodIni = regraIni.getValue();
+
+        Iterator<String> prodIter = prodIni.iterator();
+        boolean recursao = false;
+        while (prodIter.hasNext() && !recursao) {
+            String prodAtual = prodIter.next();
+            int i = 0;
+            while (i < prodAtual.length() && !recursao) {
+                if (Character.toString(prodAtual.charAt(i)).equals(nomeIni)) {
+                    recursao = true;
+                }
+                i++;
+            }
+        }
+        
+        if (recursao) {
+            Set<String> prodIniNovo = new HashSet<>();
+            prodIniNovo.add(nomeIni);
+            Map<String, Set<String>> regrasNovo = new LinkedHashMap<>();
+            regrasNovo.put("S'", prodIniNovo); // o início antigo passa a ser produção do novo
+            regrasNovo.putAll(regras);
+            Gramatica gramNovo = new Gramatica(regrasNovo);
+            return gramNovo;
+        } else {
+            Gramatica gramNovo = new Gramatica(regras);
+            return gramNovo;
         }
     }
     
